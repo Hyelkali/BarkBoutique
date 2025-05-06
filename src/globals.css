@@ -1,0 +1,344 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 10, 10, 10;
+  --background-start-rgb: 245, 245, 245;
+  --background-end-rgb: 255, 255, 255;
+  --cursor-color: 10, 10, 10;
+  --cursor-trail-color: 10, 10, 10;
+}
+
+.dark {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 10, 10, 10;
+  --background-end-rgb: 0, 0, 0;
+  --cursor-color: 255, 255, 255;
+  --cursor-trail-color: 255, 255, 255;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  body {
+    cursor: auto; /* Use default cursor on mobile */
+  }
+}
+
+/* Custom inverse cursor */
+.custom-cursor {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgb(var(--cursor-color));
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  transition: opacity 0.3s ease, transform 0.2s ease, background-color 0.3s ease;
+}
+
+.custom-cursor-trail {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9998;
+  background-color: rgb(var(--cursor-trail-color));
+}
+
+/* Inverse text selection */
+::selection {
+  @apply dark:bg-white dark:text-dark-900 bg-dark-900 text-white;
+}
+
+/* Click animation */
+@keyframes click {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.cursor-click {
+  animation: click 0.3s ease-in-out;
+}
+
+/* Dark theme colors */
+.bg-dark-900 {
+  background-color: #0a0a0a;
+}
+
+.bg-dark-800 {
+  background-color: #101010;
+}
+
+.bg-dark-700 {
+  background-color: #151515;
+}
+
+.bg-dark-600 {
+  background-color: #1a1a1a;
+}
+
+.bg-dark-500 {
+  background-color: #202020;
+}
+
+.bg-dark-400 {
+  background-color: #252525;
+}
+
+.bg-dark-300 {
+  background-color: #2a2a2a;
+}
+
+/* Animation classes */
+.animate-click {
+  animation: click 0.3s ease-in-out;
+}
+
+/* Page transitions */
+.page-transition-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.page-transition-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.5s, transform 0.5s;
+}
+
+.page-transition-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page-transition-exit-active {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 0.5s, transform 0.5s;
+}
+
+/* Responsive typography */
+@media (max-width: 640px) {
+  h1 {
+    font-size: 1.875rem !important; /* 30px */
+  }
+  h2 {
+    font-size: 1.5rem !important; /* 24px */
+  }
+  h3 {
+    font-size: 1.25rem !important; /* 20px */
+  }
+  p {
+    font-size: 1rem !important; /* 16px */
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply dark:bg-dark-900 bg-gray-100;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply dark:bg-dark-600 bg-gray-300 rounded;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply dark:bg-dark-500 bg-gray-400;
+}
+
+/* Loading animations */
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Blog content styling */
+.prose {
+  @apply dark:text-gray-300 text-gray-700;
+  max-width: 65ch;
+  margin: 0 auto;
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4 {
+  @apply dark:text-white text-gray-900;
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+}
+
+.prose p {
+  margin-bottom: 1.25em;
+}
+
+.prose a {
+  @apply dark:text-blue-400 text-blue-600;
+  text-decoration: underline;
+}
+
+.prose ul,
+.prose ol {
+  margin-left: 1.5em;
+  margin-bottom: 1.25em;
+}
+
+.prose li {
+  margin-bottom: 0.5em;
+}
+
+/* Responsive grid layouts */
+.responsive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Hover effects for cards */
+.hover-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-card:hover {
+  transform: translateY(-5px);
+  @apply dark:shadow-lg shadow-md;
+}
+
+/* Mobile menu animation */
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.mobile-menu-enter {
+  animation: slideIn 0.3s forwards;
+}
+
+/* Responsive images */
+.responsive-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+/* Aspect ratios */
+.aspect-square {
+  aspect-ratio: 1 / 1;
+}
+
+.aspect-video {
+  aspect-ratio: 16 / 9;
+}
+
+/* Theme transition */
+.theme-transition {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Utility classes for animations */
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.transition-transform {
+  transition-property: transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.transition-opacity {
+  transition-property: opacity;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* Responsive padding and margins */
+@media (max-width: 640px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  section {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+}
+
+/* Scroll animations */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Product gallery */
+.product-gallery-zoom {
+  cursor: zoom-in;
+}
+
+.product-gallery-zoom.zoomed {
+  cursor: zoom-out;
+}
+
+/* Category animations */
+.category-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+.category-card:hover {
+  transform: translateY(-5px);
+  @apply dark:shadow-lg shadow-md;
+}
+
+.category-card:hover img {
+  transform: scale(1.05);
+}
+
+.category-card img {
+  transition: transform 0.5s ease;
+}
