@@ -2,66 +2,66 @@ export const Footer = () => {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="w-full py-8 px-4 dark:bg-dark-800 dark:text-gray-400 bg-gray-100 text-gray-600 transition-colors duration-300">
-      <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+    <footer className="w-full px-4 py-8 text-gray-600 transition-colors duration-300 bg-gray-100 dark:bg-dark-900 dark:text-gray-400">
+      <div className="container grid grid-cols-1 gap-8 mx-auto md:grid-cols-4">
         <div>
-          <h3 className="dark:text-white text-gray-900 font-bold text-lg mb-4">BarkBoutique</h3>
+          <h3 className="mb-4 text-lg font-bold text-gray-900 dark:text-white">BarkBoutique</h3>
           <p className="text-sm">Premium products for your furry friends, designed with love and care.</p>
         </div>
         <div>
-          <h4 className="dark:text-white text-gray-900 font-bold mb-4">Shop</h4>
+          <h4 className="mb-4 font-bold text-gray-900 dark:text-white">Shop</h4>
           <ul className="space-y-2 text-sm">
             <li>
-              <a href="/shop" className="hover:dark:text-white hover:text-gray-900 transition-colors">
+              <a href="/shop" className="transition-colors hover:dark:text-white hover:text-gray-900">
                 All Products
               </a>
             </li>
             <li>
-              <a href="#" className="hover:dark:text-white hover:text-gray-900 transition-colors">
+              <a href="#" className="transition-colors hover:dark:text-white hover:text-gray-900">
                 New Arrivals
               </a>
             </li>
             <li>
-              <a href="#" className="hover:dark:text-white hover:text-gray-900 transition-colors">
+              <a href="#" className="transition-colors hover:dark:text-white hover:text-gray-900">
                 Best Sellers
               </a>
             </li>
             <li>
-              <a href="#" className="hover:dark:text-white hover:text-gray-900 transition-colors">
+              <a href="#" className="transition-colors hover:dark:text-white hover:text-gray-900">
                 Sale
               </a>
             </li>
           </ul>
         </div>
         <div>
-          <h4 className="dark:text-white text-gray-900 font-bold mb-4">Information</h4>
+          <h4 className="mb-4 font-bold text-gray-900 dark:text-white">Information</h4>
           <ul className="space-y-2 text-sm">
             <li>
-              <a href="#" className="hover:dark:text-white hover:text-gray-900 transition-colors">
+              <a href="#" className="transition-colors hover:dark:text-white hover:text-gray-900">
                 About Us
               </a>
             </li>
             <li>
-              <a href="#" className="hover:dark:text-white hover:text-gray-900 transition-colors">
+              <a href="#" className="transition-colors hover:dark:text-white hover:text-gray-900">
                 Contact
               </a>
             </li>
             <li>
-              <a href="#" className="hover:dark:text-white hover:text-gray-900 transition-colors">
+              <a href="#" className="transition-colors hover:dark:text-white hover:text-gray-900">
                 Shipping & Returns
               </a>
             </li>
             <li>
-              <a href="#" className="hover:dark:text-white hover:text-gray-900 transition-colors">
+              <a href="#" className="transition-colors hover:dark:text-white hover:text-gray-900">
                 Privacy Policy
               </a>
             </li>
           </ul>
         </div>
         <div>
-          <h4 className="dark:text-white text-gray-900 font-bold mb-4">Connect</h4>
+          <h4 className="mb-4 font-bold text-gray-900 dark:text-white">Connect</h4>
           <div className="flex space-x-4">
-            <a href="#" className="hover:dark:text-white hover:text-gray-900 transition-colors">
+            <a href="#" className="transition-colors hover:dark:text-white hover:text-gray-900">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -76,7 +76,7 @@ export const Footer = () => {
                 <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
               </svg>
             </a>
-            <a href="#" className="hover:dark:text-white hover:text-gray-900 transition-colors">
+            <a href="#" className="transition-colors hover:dark:text-white hover:text-gray-900">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -93,7 +93,7 @@ export const Footer = () => {
                 <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
               </svg>
             </a>
-            <a href="#" className="hover:dark:text-white hover:text-gray-900 transition-colors">
+            <a href="#" className="transition-colors hover:dark:text-white hover:text-gray-900">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -111,7 +111,7 @@ export const Footer = () => {
           </div>
         </div>
       </div>
-      <div className="border-t dark:border-dark-600 border-gray-200 mt-8 pt-8 text-center text-sm">
+      <div className="pt-8 mt-8 text-sm text-center border-t border-gray-200 dark:border-dark-600">
         <p>&copy; {currentYear} BarkBoutique. All rights reserved.</p>
       </div>
     </footer>

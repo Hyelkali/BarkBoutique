@@ -35,7 +35,7 @@ export const Navigation = () => {
 
   return (
     <>
-      <header className="sticky top-0 z-50 transition-colors duration-300 bg-white shadow-sm dark:bg-dark-800">
+      <header className="sticky top-0 z-50 transition-colors duration-300 bg-white shadow-sm dark:bg-dark-900">
         <div className="container py-2 mx-auto">
           <div className="flex items-center px-2 justify-evenly">
             <div className="flex items-center">

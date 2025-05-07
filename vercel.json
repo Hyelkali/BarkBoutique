@@ -4,10 +4,18 @@
         "src": "package.json",
         "use": "@vercel/static-build",
         "config": {
-          "buildCommand": "npm run vercel-build"
+          "buildCommand": "npm run build"
         }
       }
     ],
-    "routes": [{ "handle": "filesystem" }, { "src": "/.*", "dest": "/index.html" }]
+    "routes": [
+      { "handle": "filesystem" },
+      { "src": "/.*", "dest": "/index.html" }
+    ],
+    "build": {
+      "env": {
+        "NODE_VERSION": "20"
+      }
+    }
   }
   

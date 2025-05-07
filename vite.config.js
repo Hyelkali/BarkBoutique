@@ -23,6 +23,25 @@ export default defineConfig({
           animations: ["framer-motion"],
         },
       },
+      // Explicitly mark firebase and vercel blob modules as external
+      external: [
+        "firebase/app",
+        "firebase/auth",
+        "firebase/firestore",
+        "firebase/storage",
+        "@vercel/blob",
+        "@vercel/blob/client",
+      ],
     },
+  },
+  optimizeDeps: {
+    include: [
+      "firebase/app",
+      "firebase/auth",
+      "firebase/firestore",
+      "firebase/storage",
+      "@vercel/blob",
+      "@vercel/blob/client",
+    ],
   },
 })
