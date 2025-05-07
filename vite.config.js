@@ -10,4 +10,19 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  // Ensure proper build output for Vercel
+  build: {
+    outDir: "dist",
+    assetsDir: "assets",
+    // Reduce chunk size warnings
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ["react", "react-dom", "react-router-dom"],
+          animations: ["framer-motion"],
+        },
+      },
+    },
+  },
 })
