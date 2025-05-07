@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { motion } from "framer-motion"
-import { upload } from "@vercel/blob/client"
+// Using fetch for file uploads instead of direct Blob client import
 import { getProductById, getCategories } from "../../data/products"
 
 const EditProduct = () => {
@@ -119,18 +119,40 @@ const EditProduct = () => {
       let image2Url = image2Preview
 
       if (image1File) {
-        const blob1 = await upload(image1File.name, image1File, {
-          access: "public",
-          handleUploadUrl: "/api/upload",
+        // Create form data for upload
+        const formData1 = new FormData()
+        formData1.append("file", image1File)
+
+        // Upload to Vercel Blob via API route
+        const response1 = await fetch("/api/upload", {
+          method: "POST",
+          body: formData1,
         })
+
+        if (!response1.ok) {
+          throw new Error("Failed to upload image 1")
+        }
+
+        const blob1 = await response1.json()
         image1Url = blob1.url
       }
 
       if (image2File) {
-        const blob2 = await upload(image2File.name, image2File, {
-          access: "public",
-          handleUploadUrl: "/api/upload",
+        // Create form data for upload
+        const formData2 = new FormData()
+        formData2.append("file", image2File)
+
+        // Upload to Vercel Blob via API route
+        const response2 = await fetch("/api/upload", {
+          method: "POST",
+          body: formData2,
         })
+
+        if (!response2.ok) {
+          throw new Error("Failed to upload image 2")
+        }
+
+        const blob2 = await response2.json()
         image2Url = blob2.url
       }
 
@@ -167,23 +189,23 @@ const EditProduct = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="container mx-auto px-4 py-8"
+      className="container px-4 py-8 mx-auto"
     >
-      <div className="bg-white dark:bg-dark-800 rounded-lg shadow-lg p-6">
+      <div className="p-6 bg-white rounded-lg shadow-lg dark:bg-dark-800">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-3xl font-bold dark:text-white">Edit Product</h1>
           <button
             onClick={() => navigate("/admin/products")}
-            className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 dark:bg-dark-700 dark:border-dark-600 dark:text-white dark:hover:bg-dark-600"
+            className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 dark:bg-dark-700 dark:border-dark-600 dark:text-white dark:hover:bg-dark-600"
           >
             Cancel
           </button>
         </div>
 
-        {error && <div className="mb-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">{error}</div>}
+        {error && <div className="px-4 py-3 mb-6 text-red-700 bg-red-100 border border-red-400 rounded">{error}</div>}
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                 Product Name *
@@ -194,7 +216,7 @@ const EditProduct = () => {
                 name="name"
                 value={formData.name}
                 onChange={handleInputChange}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm dark:bg-dark-700 dark:border-dark-600 dark:text-white"
+                className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm dark:bg-dark-700 dark:border-dark-600 dark:text-white"
                 required
               />
             </div>
@@ -211,7 +233,7 @@ const EditProduct = () => {
                 onChange={handleInputChange}
                 step="0.01"
                 min="0"
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm dark:bg-dark-700 dark:border-dark-600 dark:text-white"
+                className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm dark:bg-dark-700 dark:border-dark-600 dark:text-white"
                 required
               />
             </div>
@@ -225,7 +247,7 @@ const EditProduct = () => {
                 name="category"
                 value={formData.category}
                 onChange={handleInputChange}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm dark:bg-dark-700 dark:border-dark-600 dark:text-white"
+                className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm dark:bg-dark-700 dark:border-dark-600 dark:text-white"
                 required
               >
                 <option value="">Select a category</option>
@@ -247,23 +269,23 @@ const EditProduct = () => {
                 value={formData.description}
                 onChange={handleInputChange}
                 rows="4"
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm dark:bg-dark-700 dark:border-dark-600 dark:text-white"
+                className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm dark:bg-dark-700 dark:border-dark-600 dark:text-white"
                 required
               ></textarea>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Product Image 1</label>
+              <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Product Image 1</label>
               <div className="flex items-center space-x-4">
-                <div className="flex-shrink-0 h-24 w-24 border border-gray-300 dark:border-dark-600 rounded-md overflow-hidden bg-gray-100 dark:bg-dark-700">
+                <div className="flex-shrink-0 w-24 h-24 overflow-hidden bg-gray-100 border border-gray-300 rounded-md dark:border-dark-600 dark:bg-dark-700">
                   {image1Preview ? (
                     <img
                       src={image1Preview || "/placeholder.svg"}
                       alt="Product preview"
-                      className="h-full w-full object-cover"
+                      className="object-cover w-full h-full"
                     />
                   ) : (
-                    <div className="h-full w-full flex items-center justify-center text-gray-400">No image</div>
+                    <div className="flex items-center justify-center w-full h-full text-gray-400">No image</div>
                   )}
                 </div>
                 <div className="flex-1">
@@ -279,17 +301,17 @@ const EditProduct = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Product Image 2</label>
+              <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Product Image 2</label>
               <div className="flex items-center space-x-4">
-                <div className="flex-shrink-0 h-24 w-24 border border-gray-300 dark:border-dark-600 rounded-md overflow-hidden bg-gray-100 dark:bg-dark-700">
+                <div className="flex-shrink-0 w-24 h-24 overflow-hidden bg-gray-100 border border-gray-300 rounded-md dark:border-dark-600 dark:bg-dark-700">
                   {image2Preview ? (
                     <img
                       src={image2Preview || "/placeholder.svg"}
                       alt="Product preview"
-                      className="h-full w-full object-cover"
+                      className="object-cover w-full h-full"
                     />
                   ) : (
-                    <div className="h-full w-full flex items-center justify-center text-gray-400">No image</div>
+                    <div className="flex items-center justify-center w-full h-full text-gray-400">No image</div>
                   )}
                 </div>
                 <div className="flex-1">
@@ -305,7 +327,7 @@ const EditProduct = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Available Sizes</label>
+              <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Available Sizes</label>
               <div className="space-y-2">
                 {formData.sizes.map((size, index) => (
                   <div key={index} className="flex items-center space-x-2">
@@ -313,7 +335,7 @@ const EditProduct = () => {
                       type="text"
                       value={size}
                       onChange={(e) => handleArrayInputChange(e, "sizes", index)}
-                      className="block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm dark:bg-dark-700 dark:border-dark-600 dark:text-white"
+                      className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm dark:bg-dark-700 dark:border-dark-600 dark:text-white"
                     />
                     {formData.sizes.length > 1 && (
                       <button
@@ -323,7 +345,7 @@ const EditProduct = () => {
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          className="h-5 w-5"
+                          className="w-5 h-5"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -342,7 +364,7 @@ const EditProduct = () => {
                 <button
                   type="button"
                   onClick={() => addArrayItem("sizes")}
-                  className="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-primary-700 bg-primary-100 hover:bg-primary-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 dark:bg-primary-900 dark:text-primary-300 dark:hover:bg-primary-800"
+                  className="inline-flex items-center px-3 py-1 text-sm font-medium leading-4 border border-transparent rounded-md text-primary-700 bg-primary-100 hover:bg-primary-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 dark:bg-primary-900 dark:text-primary-300 dark:hover:bg-primary-800"
                 >
                   Add Size
                 </button>
@@ -350,7 +372,7 @@ const EditProduct = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Features</label>
+              <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Features</label>
               <div className="space-y-2">
                 {formData.features.map((feature, index) => (
                   <div key={index} className="flex items-center space-x-2">
@@ -358,7 +380,7 @@ const EditProduct = () => {
                       type="text"
                       value={feature}
                       onChange={(e) => handleArrayInputChange(e, "features", index)}
-                      className="block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm dark:bg-dark-700 dark:border-dark-600 dark:text-white"
+                      className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm dark:bg-dark-700 dark:border-dark-600 dark:text-white"
                       placeholder="Product feature"
                     />
                     <button
@@ -368,7 +390,7 @@ const EditProduct = () => {
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5"
+                        className="w-5 h-5"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -386,7 +408,7 @@ const EditProduct = () => {
                 <button
                   type="button"
                   onClick={() => addArrayItem("features")}
-                  className="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-primary-700 bg-primary-100 hover:bg-primary-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 dark:bg-primary-900 dark:text-primary-300 dark:hover:bg-primary-800"
+                  className="inline-flex items-center px-3 py-1 text-sm font-medium leading-4 border border-transparent rounded-md text-primary-700 bg-primary-100 hover:bg-primary-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 dark:bg-primary-900 dark:text-primary-300 dark:hover:bg-primary-800"
                 >
                   Add Feature
                 </button>
@@ -394,7 +416,7 @@ const EditProduct = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">For Breeds</label>
+              <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">For Breeds</label>
               <div className="space-y-2">
                 {formData.forBreeds.map((breed, index) => (
                   <div key={index} className="flex items-center space-x-2">
@@ -402,7 +424,7 @@ const EditProduct = () => {
                       type="text"
                       value={breed}
                       onChange={(e) => handleArrayInputChange(e, "forBreeds", index)}
-                      className="block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm dark:bg-dark-700 dark:border-dark-600 dark:text-white"
+                      className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm dark:bg-dark-700 dark:border-dark-600 dark:text-white"
                       placeholder="Suitable for breed"
                     />
                     {formData.forBreeds.length > 1 && (
@@ -413,7 +435,7 @@ const EditProduct = () => {
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          className="h-5 w-5"
+                          className="w-5 h-5"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -432,7 +454,7 @@ const EditProduct = () => {
                 <button
                   type="button"
                   onClick={() => addArrayItem("forBreeds")}
-                  className="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-primary-700 bg-primary-100 hover:bg-primary-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 dark:bg-primary-900 dark:text-primary-300 dark:hover:bg-primary-800"
+                  className="inline-flex items-center px-3 py-1 text-sm font-medium leading-4 border border-transparent rounded-md text-primary-700 bg-primary-100 hover:bg-primary-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 dark:bg-primary-900 dark:text-primary-300 dark:hover:bg-primary-800"
                 >
                   Add Breed
                 </button>
@@ -440,7 +462,7 @@ const EditProduct = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Best For</label>
+              <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Best For</label>
               <div className="space-y-2">
                 {formData.bestFor.map((use, index) => (
                   <div key={index} className="flex items-center space-x-2">
@@ -448,7 +470,7 @@ const EditProduct = () => {
                       type="text"
                       value={use}
                       onChange={(e) => handleArrayInputChange(e, "bestFor", index)}
-                      className="block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm dark:bg-dark-700 dark:border-dark-600 dark:text-white"
+                      className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm dark:bg-dark-700 dark:border-dark-600 dark:text-white"
                       placeholder="Best use case"
                     />
                     <button
@@ -458,7 +480,7 @@ const EditProduct = () => {
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5"
+                        className="w-5 h-5"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -476,7 +498,7 @@ const EditProduct = () => {
                 <button
                   type="button"
                   onClick={() => addArrayItem("bestFor")}
-                  className="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-primary-700 bg-primary-100 hover:bg-primary-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 dark:bg-primary-900 dark:text-primary-300 dark:hover:bg-primary-800"
+                  className="inline-flex items-center px-3 py-1 text-sm font-medium leading-4 border border-transparent rounded-md text-primary-700 bg-primary-100 hover:bg-primary-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 dark:bg-primary-900 dark:text-primary-300 dark:hover:bg-primary-800"
                 >
                   Add Use Case
                 </button>
@@ -488,7 +510,7 @@ const EditProduct = () => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex items-center px-4 py-2 text-sm font-medium text-white border border-transparent rounded-md shadow-sm bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? "Saving..." : "Update Product"}
             </button>

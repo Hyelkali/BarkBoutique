@@ -23,25 +23,20 @@ export default defineConfig({
           animations: ["framer-motion"],
         },
       },
-      // Explicitly mark firebase and vercel blob modules as external
-      external: [
-        "firebase/app",
-        "firebase/auth",
-        "firebase/firestore",
-        "firebase/storage",
-        "@vercel/blob",
-        "@vercel/blob/client",
-      ],
+      // Explicitly mark firebase modules as external
+      external: ["firebase/app", "firebase/auth", "firebase/firestore", "firebase/storage"],
     },
   },
   optimizeDeps: {
-    include: [
-      "firebase/app",
-      "firebase/auth",
-      "firebase/firestore",
-      "firebase/storage",
-      "@vercel/blob",
-      "@vercel/blob/client",
-    ],
+    include: ["firebase/app", "firebase/auth", "firebase/firestore", "firebase/storage"],
+  },
+  // Configure server proxy for API routes
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://localhost:3000",
+        changeOrigin: true,
+      },
+    },
   },
 })
