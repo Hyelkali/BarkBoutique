@@ -65,7 +65,7 @@ export default function ProductDetail() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen">
         <div className="animate-pulse">Loading...</div>
       </div>
     )
@@ -73,9 +73,9 @@ export default function ProductDetail() {
 
   if (!product) {
     return (
-      <div className="container mx-auto px-4 py-12">
+      <div className="container px-4 py-12 mx-auto">
         <div className="text-center">
-          <h2 className="text-2xl font-bold mb-4">Product Not Found</h2>
+          <h2 className="mb-4 text-2xl font-bold">Product Not Found</h2>
           <Button onClick={() => navigate("/")}>Back to Home</Button>
         </div>
       </div>
@@ -88,11 +88,17 @@ export default function ProductDetail() {
       return
     }
 
-    addToCart({
-      ...product,
-      selectedSize,
+    addToCart(
+      {
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image1: product.image1,
+        image2: product.image2,
+      },
       quantity,
-    })
+      selectedSize,
+    )
   }
 
   const toggleWishlist = () => {
@@ -113,7 +119,7 @@ export default function ProductDetail() {
   return (
     <div className="pt-16 md:pt-20">
       {/* Breadcrumbs */}
-      <div className="container mx-auto px-4 py-4">
+      <div className="container px-4 py-4 mx-auto">
         <div className="flex items-center text-sm">
           <Link
             to="/"
@@ -133,12 +139,12 @@ export default function ProductDetail() {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
-        <Button variant="ghost" className="mb-6 flex items-center gap-2" onClick={() => navigate("/shop")}>
+      <div className="container px-4 py-8 mx-auto">
+        <Button variant="ghost" className="flex items-center gap-2 mb-6" onClick={() => navigate("/shop")}>
           <ArrowLeft className="w-4 h-4" /> Back to Products
         </Button>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
           {/* Product Images */}
           <motion.div
             className="space-y-4"
@@ -176,14 +182,14 @@ export default function ProductDetail() {
               </span>
             </div>
 
-            <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
-            <div className="text-2xl font-semibold mb-4">${product.price.toFixed(2)}</div>
+            <h1 className="mb-2 text-3xl font-bold">{product.name}</h1>
+            <div className="mb-4 text-2xl font-semibold">${product.price.toFixed(2)}</div>
 
             {/* Mobile Accordion */}
-            <div className="md:hidden space-y-4 mb-6">
+            <div className="mb-6 space-y-4 md:hidden">
               <div className={`border-b ${isDark ? "border-dark-600" : "border-gray-200"} pb-2`}>
                 <button
-                  className="flex justify-between items-center w-full py-2"
+                  className="flex items-center justify-between w-full py-2"
                   onClick={() => toggleSection("description")}
                 >
                   <span className="font-medium">Description</span>
@@ -202,7 +208,7 @@ export default function ProductDetail() {
 
               <div className={`border-b ${isDark ? "border-dark-600" : "border-gray-200"} pb-2`}>
                 <button
-                  className="flex justify-between items-center w-full py-2"
+                  className="flex items-center justify-between w-full py-2"
                   onClick={() => toggleSection("features")}
                 >
                   <span className="font-medium">Features</span>
@@ -228,7 +234,7 @@ export default function ProductDetail() {
 
               <div className={`border-b ${isDark ? "border-dark-600" : "border-gray-200"} pb-2`}>
                 <button
-                  className="flex justify-between items-center w-full py-2"
+                  className="flex items-center justify-between w-full py-2"
                   onClick={() => toggleSection("sizing")}
                 >
                   <span className="font-medium">Sizing</span>
@@ -255,7 +261,7 @@ export default function ProductDetail() {
             </div>
 
             {/* Desktop Tabs */}
-            <div className="hidden md:block mb-6">
+            <div className="hidden mb-6 md:block">
               <div className={`flex border-b ${isDark ? "border-dark-600" : "border-gray-200"} mb-4`}>
                 {["description", "features", "sizing"].map((tab) => (
                   <button
@@ -308,7 +314,7 @@ export default function ProductDetail() {
 
             {product.sizes && product.sizes.length > 0 && (
               <div className="mb-6">
-                <h2 className="text-sm font-medium mb-2">Size</h2>
+                <h2 className="mb-2 text-sm font-medium">Size</h2>
                 <div className="flex flex-wrap gap-2">
                   {product.sizes.map((size) => (
                     <Button
@@ -325,7 +331,7 @@ export default function ProductDetail() {
             )}
 
             <div className="mb-6">
-              <h2 className="text-sm font-medium mb-2">Quantity</h2>
+              <h2 className="mb-2 text-sm font-medium">Quantity</h2>
               <div className="flex items-center">
                 <Button variant="outline" size="sm" onClick={decrementQuantity}>
                   -
@@ -339,7 +345,7 @@ export default function ProductDetail() {
 
             <div className="flex gap-4 mb-6">
               <Button
-                className="flex-1 flex items-center justify-center gap-2"
+                className="flex items-center justify-center flex-1 gap-2"
                 onClick={handleAddToCart}
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
@@ -416,8 +422,8 @@ export default function ProductDetail() {
           animate={relatedInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="text-2xl font-bold mb-6">You Might Also Like</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+          <h2 className="mb-6 text-2xl font-bold">You Might Also Like</h2>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
             {products
               .filter((p) => p.id !== product.id && p.category === product.category)
               .slice(0, 4)

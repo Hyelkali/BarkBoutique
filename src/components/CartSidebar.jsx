@@ -52,7 +52,7 @@ export function CartSidebar() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="fixed inset-0 bg-black bg-opacity-50 z-40 backdrop-blur-sm"
+            className="fixed inset-0 z-40 bg-black bg-opacity-50 backdrop-blur-sm"
             onClick={toggleCart}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -66,7 +66,7 @@ export function CartSidebar() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="fixed top-0 right-0 h-full w-full sm:w-96 bg-dark-800 z-50 shadow-xl"
+            className="fixed top-0 right-0 z-50 w-full h-full shadow-xl sm:w-96 bg-dark-800"
             variants={sidebarVariants}
             initial="hidden"
             animate="visible"
@@ -75,19 +75,19 @@ export function CartSidebar() {
             <div className="flex flex-col h-full">
               {/* Header */}
               <motion.div
-                className="flex justify-between items-center p-4 border-b border-dark-600"
+                className="flex items-center justify-between p-4 border-b border-dark-600"
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
               >
                 <h2 className="text-xl font-bold">Your Cart</h2>
-                <button onClick={toggleCart} className="p-2 rounded-full hover:bg-dark-600 transition-colors">
+                <button onClick={toggleCart} className="p-2 transition-colors rounded-full hover:bg-dark-600">
                   <X className="w-6 h-6" />
                 </button>
               </motion.div>
 
               {/* Cart Items */}
-              <div className="flex-grow overflow-y-auto p-4">
+              <div className="flex-grow p-4 overflow-y-auto">
                 {cart.length === 0 ? (
                   <motion.div
                     className="flex flex-col items-center justify-center h-full text-gray-400"
@@ -107,17 +107,17 @@ export function CartSidebar() {
                     <AnimatePresence>
                       {cart.map((item) => (
                         <motion.li
-                          key={item.id}
-                          className="flex border-b border-dark-600 pb-4"
+                          key={`${item.id}-${item.selectedSize || "default"}`}
+                          className="flex pb-4 border-b border-dark-600"
                           variants={itemVariants}
                           layout
-                          layoutId={`cart-item-${item.id}`}
+                          layoutId={`cart-item-${item.id}-${item.selectedSize || "default"}`}
                         >
-                          <div className="w-20 h-20 bg-dark-700 rounded overflow-hidden mr-4 flex-shrink-0">
+                          <div className="flex-shrink-0 w-20 h-20 mr-4 overflow-hidden rounded bg-dark-700">
                             <img
                               src={item.image1 || "/placeholder.svg"}
                               alt={item.name}
-                              className="w-full h-full object-cover"
+                              className="object-cover w-full h-full"
                             />
                           </div>
                           <div className="flex-grow">
@@ -128,8 +128,8 @@ export function CartSidebar() {
                             <div className="flex items-center mt-2">
                               <motion.button
                                 whileTap={{ scale: 0.9 }}
-                                onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                                className="p-1 rounded-full hover:bg-dark-600 transition-colors"
+                                onClick={() => updateQuantity(item.id, item.quantity - 1, item.selectedSize)}
+                                className="p-1 transition-colors rounded-full hover:bg-dark-600"
                                 disabled={item.quantity <= 1}
                               >
                                 <Minus className="w-4 h-4" />
@@ -137,15 +137,15 @@ export function CartSidebar() {
                               <span className="mx-2 min-w-[20px] text-center">{item.quantity}</span>
                               <motion.button
                                 whileTap={{ scale: 0.9 }}
-                                onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                className="p-1 rounded-full hover:bg-dark-600 transition-colors"
+                                onClick={() => updateQuantity(item.id, item.quantity + 1, item.selectedSize)}
+                                className="p-1 transition-colors rounded-full hover:bg-dark-600"
                               >
                                 <Plus className="w-4 h-4" />
                               </motion.button>
 
                               <motion.button
-                                onClick={() => removeFromCart(item.id)}
-                                className="ml-auto p-1 rounded-full hover:bg-dark-600 text-red-500 transition-colors"
+                                onClick={() => removeFromCart(item.id, item.selectedSize)}
+                                className="p-1 ml-auto text-red-500 transition-colors rounded-full hover:bg-dark-600"
                                 whileHover={{ scale: 1.2, rotate: 10 }}
                                 whileTap={{ scale: 0.9 }}
                               >
@@ -194,17 +194,12 @@ export function CartSidebar() {
                       ${totalPrice.toFixed(2)}
                     </motion.span>
                   </div>
-                  <Button
-                    className="w-full"
-                    onClick={handleCheckout}
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.97 }}
-                  >
+                  <Button className="w-full" onClick={handleCheckout}>
                     Checkout
                   </Button>
                   <button
                     onClick={toggleCart}
-                    className="w-full text-center mt-2 text-sm text-gray-400 hover:text-white transition-colors"
+                    className="w-full mt-2 text-sm text-center text-gray-400 transition-colors hover:text-white"
                   >
                     Continue Shopping
                   </button>

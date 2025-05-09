@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom"
+
 export const Footer = () => {
   const currentYear = new Date().getFullYear()
 
@@ -33,30 +35,65 @@ export const Footer = () => {
             </li>
           </ul>
         </div>
-        <div>
-          <h4 className="mb-4 font-bold text-gray-900 dark:text-white">Information</h4>
-          <ul className="space-y-2 text-sm">
-            <li>
-              <a href="#" className="transition-colors hover:dark:text-white hover:text-gray-900">
-                About Us
-              </a>
-            </li>
-            <li>
-              <a href="#" className="transition-colors hover:dark:text-white hover:text-gray-900">
-                Contact
-              </a>
-            </li>
-            <li>
-              <a href="#" className="transition-colors hover:dark:text-white hover:text-gray-900">
-                Shipping & Returns
-              </a>
-            </li>
-            <li>
-              <a href="#" className="transition-colors hover:dark:text-white hover:text-gray-900">
-                Privacy Policy
-              </a>
-            </li>
-          </ul>
+        <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
+          <div>
+            <h3 className="mb-4 text-sm font-semibold text-gray-600 uppercase dark:text-gray-300">Company</h3>
+            <ul className="space-y-3">
+              <li>
+                <Link
+                  to="/about"
+                  className="text-gray-500 transition-colors hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400"
+                >
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/contact"
+                  className="text-gray-500 transition-colors hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400"
+                >
+                  Contact
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/blog"
+                  className="text-gray-500 transition-colors hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400"
+                >
+                  Blog
+                </Link>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="mb-4 text-sm font-semibold text-gray-600 uppercase dark:text-gray-300">Help</h3>
+            <ul className="space-y-3">
+              <li>
+                <Link
+                  to="/shipping-returns"
+                  className="text-gray-500 transition-colors hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400"
+                >
+                  Shipping & Returns
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/privacy-policy"
+                  className="text-gray-500 transition-colors hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400"
+                >
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/faq"
+                  className="text-gray-500 transition-colors hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400"
+                >
+                  FAQ
+                </Link>
+              </li>
+            </ul>
+          </div>
         </div>
         <div>
           <h4 className="mb-4 font-bold text-gray-900 dark:text-white">Connect</h4>

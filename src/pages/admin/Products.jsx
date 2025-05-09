@@ -3,11 +3,14 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import { motion } from "framer-motion"
+import { useToast } from "../../components/ToastContext"
 import products from "../../data/products"
+import { AlertCircle } from "lucide-react"
 
 const AdminProducts = () => {
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("")
+  const toast = useToast()
 
   // Get unique categories
   const categories = [...new Set(products.map((product) => product.category))]
@@ -18,6 +21,10 @@ const AdminProducts = () => {
     const matchesCategory = selectedCategory === "" || product.category === selectedCategory
     return matchesSearch && matchesCategory
   })
+
+  const handleDeleteClick = () => {
+    toast.error("Delete functionality is not implemented in this demo")
+  }
 
   return (
     <motion.div
@@ -44,6 +51,19 @@ const AdminProducts = () => {
             </svg>
             Add New Product
           </Link>
+        </div>
+
+        <div className="bg-yellow-100 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-800 rounded-md p-4 mb-6">
+          <div className="flex">
+            <AlertCircle className="h-5 w-5 text-yellow-500 mr-2 flex-shrink-0" />
+            <div>
+              <p className="text-yellow-800 dark:text-yellow-200 font-medium">Product Editing Disabled</p>
+              <p className="text-yellow-700 dark:text-yellow-300 text-sm mt-1">
+                Product editing functionality has been disabled in this demo to prevent issues with the Vercel Blob
+                storage.
+              </p>
+            </div>
+          </div>
         </div>
 
         <div className="flex flex-col md:flex-row md:items-center mb-6 gap-4">
@@ -160,13 +180,10 @@ const AdminProducts = () => {
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <Link
-                      to={`/admin/products/edit/${product.id}`}
-                      className="text-primary-600 hover:text-primary-900 dark:text-primary-400 dark:hover:text-primary-300 mr-4"
+                    <button
+                      className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
+                      onClick={handleDeleteClick}
                     >
-                      Edit
-                    </Link>
-                    <button className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">
                       Delete
                     </button>
                   </td>

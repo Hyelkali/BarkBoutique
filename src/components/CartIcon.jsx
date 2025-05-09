@@ -3,6 +3,7 @@
 import React from "react"
 import { ShoppingCart } from "lucide-react"
 import { useCart } from "./CartContext"
+import { motion } from "framer-motion"
 
 export function CartIcon() {
   const { toggleCart, totalItems } = useCart()
@@ -15,18 +16,25 @@ export function CartIcon() {
   }
 
   return (
-    <button
+    <motion.button
       onClick={handleClick}
       className={`p-2 rounded-full bg-dark-400 hover:bg-dark-300 transition-colors duration-200 relative ${
         isClicked ? "animate-click" : ""
       }`}
+      whileHover={{ scale: 1.1 }}
+      whileTap={{ scale: 0.9 }}
     >
       <ShoppingCart className="w-6 h-6 text-gray-100" />
       {totalItems > 0 && (
-        <span className="absolute -top-1 -right-1 bg-white text-dark-900 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
+        <motion.span
+          className="absolute flex items-center justify-center w-5 h-5 text-xs font-bold bg-white rounded-full -top-1 -right-1 text-dark-900"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          key={totalItems}
+        >
           {totalItems}
-        </span>
+        </motion.span>
       )}
-    </button>
+    </motion.button>
   )
 }

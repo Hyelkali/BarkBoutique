@@ -3,12 +3,17 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useCart } from "../components/CartContext"
+import { useOrders } from "../components/OrderContext"
+import { useToast } from "../components/ToastContext"
 import { Button } from "../components/ui/button"
-import { CheckCircle } from "lucide-react"
+import { CheckCircle, AlertCircle } from "lucide-react"
 
 export default function Checkout() {
   const navigate = useNavigate()
-  const { cart, totalPrice, removeFromCart } = useCart()
+  const { cart, totalPrice, removeFromCart, clearCart } = useCart()
+  const { addOrder } = useOrders()
+  const toast = useToast()
+
   const [step, setStep] = useState(1)
   const [formData, setFormData] = useState({
     // Shipping info
@@ -29,6 +34,8 @@ export default function Checkout() {
   })
   const [orderComplete, setOrderComplete] = useState(false)
   const [orderId, setOrderId] = useState("")
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState("")
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -44,21 +51,80 @@ export default function Checkout() {
     window.scrollTo(0, 0)
   }
 
-  const handleSubmitPayment = (e) => {
+  const handleSubmitPayment = async (e) => {
     e.preventDefault()
+    setIsSubmitting(true)
+    setError("")
 
-    // Generate random order ID
-    const randomOrderId = "ORD-" + Math.random().toString(36).substring(2, 10).toUpperCase()
-    setOrderId(randomOrderId)
+    try {
+      // Validate payment info (simple validation for demo)
+      if (formData.cardNumber.length < 16) {
+        throw new Error("Please enter a valid card number")
+      }
 
-    // Clear cart and show order confirmation
-    cart.forEach((item) => removeFromCart(item.id))
-    setOrderComplete(true)
-    window.scrollTo(0, 0)
+      if (!formData.expDate.match(/^\d{2}\/\d{2}$/)) {
+        throw new Error("Please enter a valid expiration date (MM/YY)")
+      }
+
+      if (formData.cvv.length < 3) {
+        throw new Error("Please enter a valid CVV")
+      }
+
+      // Create order object
+      const orderData = {
+        items: cart.map((item) => ({
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          image: item.image1,
+          selectedSize: item.selectedSize,
+        })),
+        shipping: {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          address: formData.address,
+          city: formData.city,
+          state: formData.state,
+          zipCode: formData.zipCode,
+          country: formData.country,
+        },
+        payment: {
+          method: "credit_card",
+          last4: formData.cardNumber.slice(-4),
+        },
+        subtotal: totalPrice,
+        tax: totalPrice * 0.08,
+        shipping_cost: 0,
+        total: totalPrice + totalPrice * 0.08,
+      }
+
+      // Add order to database
+      const newOrder = await addOrder(orderData)
+      setOrderId(newOrder.id)
+
+      // Clear cart
+      clearCart()
+
+      // Show order confirmation
+      setOrderComplete(true)
+      window.scrollTo(0, 0)
+    } catch (error) {
+      console.error("Error creating order:", error)
+      setError(error.message || "Failed to place order. Please try again.")
+      toast.error(error.message || "Failed to place order. Please try again.")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const goToHome = () => {
     navigate("/")
+  }
+
+  const viewOrder = () => {
+    navigate(`/order/${orderId}`)
   }
 
   if (cart.length === 0 && !orderComplete) {
@@ -87,7 +153,14 @@ export default function Checkout() {
           <p className="text-gray-400 mb-6">
             We've sent a confirmation email to {formData.email}. You'll receive another email when your order ships.
           </p>
-          <Button onClick={goToHome}>Continue Shopping</Button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button onClick={viewOrder} variant="default">
+              View Order
+            </Button>
+            <Button onClick={goToHome} variant="outline">
+              Continue Shopping
+            </Button>
+          </div>
         </div>
       </div>
     )
@@ -109,14 +182,15 @@ export default function Checkout() {
           >
             2
           </div>
-          <div className={`h-1 w-12 ${step >= 3 ? "bg-white" : "bg-dark-400"}`}></div>
-          <div
-            className={`rounded-full w-8 h-8 flex items-center justify-center ${step === 3 ? "bg-white text-dark-900" : "bg-dark-400"}`}
-          >
-            3
-          </div>
         </div>
       </div>
+
+      {error && (
+        <div className="mb-6 p-4 bg-red-900/30 border border-red-800 rounded-md flex items-start max-w-3xl mx-auto">
+          <AlertCircle className="text-red-500 mr-2 flex-shrink-0 mt-0.5" size={18} />
+          <p className="text-red-400">{error}</p>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Form Section */}
@@ -293,11 +367,17 @@ export default function Checkout() {
                 </div>
 
                 <div className="pt-4 flex gap-4">
-                  <Button type="button" variant="outline" onClick={() => setStep(1)} className="flex-1">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setStep(1)}
+                    className="flex-1"
+                    disabled={isSubmitting}
+                  >
                     Back
                   </Button>
-                  <Button type="submit" className="flex-1">
-                    Complete Order
+                  <Button type="submit" className="flex-1" disabled={isSubmitting}>
+                    {isSubmitting ? "Processing..." : "Complete Order"}
                   </Button>
                 </div>
               </form>
