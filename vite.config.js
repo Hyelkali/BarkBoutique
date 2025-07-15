@@ -24,11 +24,11 @@ export default defineConfig({
         },
       },
       // Explicitly mark firebase modules as external
-      external: ["firebase/app", "firebase/auth", "firebase/firestore", "firebase/storage"],
+      external: [],
     },
   },
   optimizeDeps: {
-    include: ["firebase/app", "firebase/auth", "firebase/firestore", "firebase/storage"],
+    include: [],
   },
   // Configure server proxy for API routes
   server: {
